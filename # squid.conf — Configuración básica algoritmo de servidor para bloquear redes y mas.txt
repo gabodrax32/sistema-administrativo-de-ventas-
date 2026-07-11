@@ -1,0 +1,36 @@
+# squid.conf — Configuración básica para bloquear música, redes sociales y streaming
+# Puerto de escucha del proxy
+http_port 3128
+# Definir listas de control de acceso (ACL)
+acl bad_sites dstdomain "/etc/squid/blacklist.txt"
+# Reglas de acceso
+http_access deny bad_sites
+http_access allow all
+# Logs de acceso
+access_log /var/log/squid/access.log
+# Otros ajustes básicos (opcional)
+visible_hostname MiServidorProxy
+# Redes sociales
+.facebook.com
+.instagram.com
+.tiktok.com
+.twitter.com
+# Música
+.spotify.com
+.soundcloud.com
+.deezer.com
+# Televisión y streaming
+.netflix.com
+.disneyplus.com
+.primevideo.com
+.hbo.com
+# Deportes y transmisiones en vivo
+.espn.com
+.dazn.com
+.futbolgratis.tv
+# Si usas Ubuntu/Debian
+sudo systemctl restart squid
+# O en CentOS/RHEL
+sudo systemctl restart squid
+# Verifica que esté funcionando
+sudo systemctl status squid

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sistema de Inventario</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <h1>Sistema de Administración de Stock</h1>
+
+    <section class="panel">
+      <h2>Agregar o editar repuesto</h2>
+      <form id="productoForm">
+        <div class="grid">
+          <label>Código de barras
+            <input type="text" id="codigo" required />
+          </label>
+          <label>Nombre
+            <input type="text" id="nombre" required />
+          </label>
+          <label>Stock actual
+            <input type="number" id="stockActual" min="0" required />
+          </label>
+          <label>Stock mínimo
+            <input type="number" id="stockMinimo" min="0" required />
+          </label>
+          <label>Stock máximo
+            <input type="number" id="stockMaximo" min="0" required />
+          </label>
+        </div>
+        <button type="submit">Guardar repuesto</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <h2>Operación rápida</h2>
+      <div class="grid">
+        <label>Código escaneado
+          <input type="text" id="codigoEscaneado" />
+        </label>
+        <label>Acción
+          <select id="accion">
+            <option value="venta">Venta</option>
+            <option value="carga">Carga</option>
+          </select>
+        </label>
+        <label>Cantidad
+          <input type="number" id="cantidad" min="1" value="1" />
+        </label>
+      </div>
+      <button id="procesarBtn">Procesar</button>
+      <div id="mensaje" class="mensaje"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Inventario</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Stock</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="tablaProductos"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
