@@ -3,22 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sistema de Inventario</title>
+  <title>alvarezmotor"s24</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <main class="container">
-    <h1>Sistema de Administración de Stock</h1>
+    <h1>alvarezmotor"s24</h1>
 
     <section class="panel">
-      <h2>Agregar o editar repuesto</h2>
+      <h2>Agregar o editar producto</h2>
       <form id="productoForm">
         <div class="grid">
           <label>Código de barras
             <input type="text" id="codigo" required />
           </label>
-          <label>Nombre
+          <label>Nombre de la prenda o producto
             <input type="text" id="nombre" required />
+          </label>
+          <label>Ubicación de almacenamiento
+            <select id="ubicacionProducto" required>
+              <option value="">Crea o selecciona una ubicación</option>
+            </select>
+          </label>
+          <label>Precio unitario (ARS)
+            <input type="number" id="precio" min="0.01" step="0.01" required />
           </label>
           <label>Stock actual
             <input type="number" id="stockActual" min="0" required />
@@ -30,37 +38,98 @@
             <input type="number" id="stockMaximo" min="0" required />
           </label>
         </div>
-        <button type="submit">Guardar repuesto</button>
+        <button type="submit">Guardar producto</button>
       </form>
     </section>
 
     <section class="panel">
-      <h2>Operación rápida</h2>
-      <div class="grid">
-        <label>Código escaneado
-          <input type="text" id="codigoEscaneado" />
+      <h2>Ubicaciones de almacenamiento</h2>
+      <form id="ubicacionForm" class="ubicacion-form">
+        <label for="nombreUbicacion">Nueva ubicación
+          <input type="text" id="nombreUbicacion" placeholder="Ej.: Estante A, caja 3" required />
         </label>
-        <label>Acción
-          <select id="accion">
-            <option value="venta">Venta</option>
-            <option value="carga">Carga</option>
-          </select>
-        </label>
-        <label>Cantidad
-          <input type="number" id="cantidad" min="1" value="1" />
-        </label>
-      </div>
-      <button id="procesarBtn">Procesar</button>
-      <div id="mensaje" class="mensaje"></div>
+        <button type="submit">Crear ubicación</button>
+      </form>
+      <ul id="listaUbicaciones" class="lista-ubicaciones" aria-live="polite"></ul>
+      <div id="mensajeUbicacion" class="mensaje" aria-live="polite"></div>
     </section>
 
     <section class="panel">
+      <h2>Ventas</h2>
+      <form id="agregarVentaForm" class="venta-escaneo-form">
+        <label>Código de barras
+          <input type="text" id="codigoEscaneado" autocomplete="off" required />
+        </label>
+        <label>Cantidad
+          <input type="number" id="cantidad" min="1" step="1" value="1" required />
+        </label>
+        <button type="submit">Agregar a la venta</button>
+      </form>
+      <div class="tabla-venta-contenedor">
+        <table class="tabla-carrito">
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio unitario</th>
+              <th>Subtotal</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="carritoVenta"></tbody>
+        </table>
+      </div>
+      <div class="venta-resumen" aria-live="polite">
+        <p>Unidades vendidas <strong id="cantidadTotalVenta">0</strong></p>
+        <p>Total <strong id="precioTotalVenta">$ 0,00</strong></p>
+      </div>
+      <div class="venta-acciones">
+        <button type="button" id="vaciarCarritoBtn" class="boton-secundario">Vaciar venta</button>
+        <button type="button" id="confirmarVentaBtn">Confirmar venta</button>
+      </div>
+      <div id="mensaje" class="mensaje" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Carga de stock</h2>
+      <form id="cargaStockForm">
+        <div class="grid">
+          <label>Código de barras
+            <input type="text" id="codigoCargaStock" required />
+          </label>
+          <label>Cantidad a cargar
+            <input type="number" id="cantidadCargaStock" min="1" step="1" value="1" required />
+          </label>
+        </div>
+        <button type="submit">Registrar carga</button>
+      </form>
+      <div id="mensajeCargaStock" class="mensaje" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="panel">
+      <h2>Carga masiva desde Excel</h2>
+      <form id="importacionForm" class="importacion-form">
+        <label for="archivoExcel">Archivo Excel
+          <input type="file" id="archivoExcel" accept=".xlsx,.xls" required />
+        </label>
+        <div class="importacion-botones">
+          <button type="submit">Importar productos</button>
+          <button type="button" id="descargarPlantillaBtn" class="boton-secundario">Descargar plantilla</button>
+        </div>
+      </form>
+      <div id="mensajeImportacion" class="mensaje" role="status" aria-live="polite"></div>
+    </section>
+
+    <section id="panelInventario" class="panel">
       <h2>Inventario</h2>
       <table>
         <thead>
           <tr>
             <th>Código</th>
             <th>Nombre</th>
+            <th>Ubicación</th>
+            <th>Precio</th>
             <th>Stock</th>
             <th>Estado</th>
           </tr>
@@ -68,8 +137,30 @@
         <tbody id="tablaProductos"></tbody>
       </table>
     </section>
+
+    <section id="reciboVenta" class="recibo panel" aria-labelledby="reciboEmpresa" hidden>
+      <header class="recibo-encabezado">
+        <h2 id="reciboEmpresa">alvarezmotor"s24</h2>
+        <p>Recibo de venta</p>
+      </header>
+      <dl class="recibo-datos">
+        <div><dt>Comprobante</dt><dd id="reciboNumero"></dd></div>
+        <div><dt>Fecha</dt><dd id="reciboFecha"></dd></div>
+        <div><dt>Unidades vendidas</dt><dd id="reciboCantidadTotal"></dd></div>
+      </dl>
+      <table class="recibo-lineas">
+        <thead>
+          <tr><th>Producto</th><th>Cant.</th><th>Unit.</th><th>Subtotal</th></tr>
+        </thead>
+        <tbody id="reciboProductos"></tbody>
+      </table>
+      <p class="recibo-total"><span>Total</span><strong id="reciboTotal"></strong></p>
+      <p class="recibo-cierre">Gracias por su compra</p>
+      <button type="button" id="imprimirReciboBtn">Imprimir recibo</button>
+    </section>
   </main>
 
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
