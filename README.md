@@ -13,14 +13,18 @@ Este proyecto es una página web sencilla para gestionar un inventario de repues
 - styles.css: estilos visuales
 - script.js: lógica de la aplicación
 
-## Cómo abrirlo
-Solo abre el archivo index.html en el navegador.
+## Abrir la aplicación
 
-## Cómo publicarlo en GitHub Pages
-1. Crea un repositorio en GitHub.
-2. Sube estos archivos.
-3. Activa GitHub Pages desde Settings > Pages.
-4. Usa la rama main como fuente.
+La aplicación publicada estará disponible en:
+https://gabodrax32.github.io/sistema-administrativo-de-ventas-/
 
-## Nota
-La página es estática y no necesita servidor backend para funcionar.
+También puedes abrir `index.html` directamente en el navegador.
+
+Los cambios que se suban a `main` se publican automáticamente en GitHub Pages.
+La primera vez, selecciona **Settings > Pages > Build and deployment > Source > GitHub Actions**.
+
+## Almacenamiento
+
+La página es estática y no necesita servidor backend. El inventario se guarda en
+`localStorage` del navegador; no se sincroniza entre dispositivos ni usuarios y
+se puede perder si se borran los datos del navegador.
